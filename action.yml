@@ -1,0 +1,36 @@
+name: "ITMS Transporter"
+description: "Installs ITMS Transporter on Linux agent"
+author: "Chris Rutkowski"
+
+inputs:
+
+outputs:
+
+runs:
+  using: "composite"
+  steps:
+
+    - name: Install iTMSTransporter
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y expect
+
+        curl -fL \
+          -o installer.sh \
+          https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/resources/download/public/Transporter__Linux/bin
+
+        chmod +x installer.sh
+
+        expect -c '
+        set timeout -1
+        spawn sudo sh ./installer.sh
+        expect {
+          -re "--More--" { send " "; exp_continue }
+          -re "(?i)agree" { send "yes\r"; exp_continue }
+          eof
+        }
+        '
+
+        rm installer.sh
+        /usr/local/itms/bin/iTMSTransporter -version
