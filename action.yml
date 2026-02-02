@@ -2,10 +2,6 @@ name: "ITMS Transporter"
 description: "Installs ITMS Transporter on Linux agent"
 author: "Chris Rutkowski"
 
-inputs:
-
-outputs:
-
 runs:
   using: "composite"
   steps:
